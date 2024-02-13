@@ -3,10 +3,10 @@ import React from "react";
 import { FormContainer } from "@/components/form/form-container";
 import { useForm } from "react-hook-form";
 import { TextInput } from "@/components/inputs/text-input";
-import { error } from "console";
 import { LoginType } from "@/types";
 import { useRouter } from "next/navigation";
 import useLocalStorage from "@/utils/useLocalStorage";
+import { tokenId } from "@/utils/const";
 
 export const LoginForm = () => {
   const {
@@ -18,7 +18,7 @@ export const LoginForm = () => {
 
   const router = useRouter();
 
-  const [_, setValue] = useLocalStorage("taskpro-token", null);
+  const [_, setValue] = useLocalStorage(tokenId, null);
 
   const onSubmit = handleSubmit(async (data) => {
     const user: LoginType = {

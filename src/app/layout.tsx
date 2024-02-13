@@ -3,6 +3,7 @@ import { Inter } from "next/font/google";
 import "./globals.css";
 import { Header } from "@/components/header";
 import { Toaster } from "react-hot-toast";
+import AuthCheker from "@/components/Auth/auth-checker";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -21,7 +22,10 @@ export default function RootLayout({
       <body className={inter.className}>
         <Header />
         <Toaster position="bottom-center" />
-        <div className="bg-white h-screen">{children}</div>
+
+        <div className="bg-white h-screen">
+          <AuthCheker>{children}</AuthCheker>
+        </div>
       </body>
     </html>
   );

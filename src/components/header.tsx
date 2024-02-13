@@ -3,22 +3,17 @@ import React from "react";
 import { Dialog } from "@headlessui/react";
 import { Bars3Icon, XMarkIcon } from "@heroicons/react/24/outline";
 import { Logo } from "./logo";
-import useLocalStorage from "@/utils/useLocalStorage";
 import Link from "next/link";
-
-const navigation = [
-  { name: "Product", href: "#" },
-  { name: "Features", href: "#" },
-  { name: "Marketplace", href: "#" },
-  { name: "Company", href: "#" },
-];
+import { tokenId } from "@/utils/const";
 
 export const Header = () => {
   const [mobileMenuOpen, setMobileMenuOpen] = React.useState(false);
-  const [value] = useLocalStorage(
-    "taskpro-token",
-    localStorage.getItem("taskpro-token")
-  );
+
+  let token: string | null = null;
+  if (typeof window !== "undefined") {
+    token = localStorage.getItem(tokenId);
+  }
+
   return (
     <header className="absolute inset-x-0 top-0 z-50">
       <nav
@@ -38,27 +33,18 @@ export const Header = () => {
             <Bars3Icon className="h-6 w-6" aria-hidden="true" />
           </button>
         </div>
-        <div className="hidden lg:flex lg:gap-x-12">
-          {/*           {navigation.map((item) => (
-            <a
-              key={item.name}
-              href={item.href}
-              className="text-sm font-semibold leading-6 text-gray-900"
-            >
-              {item.name}
-            </a>
-          ))} */}
+        <div
+          className={`${
+            token ? "hidden" : "hidden lg:flex lg:flex-1 lg:justify-end"
+          }`}
+        >
+          <Link
+            href="/login"
+            className="text-sm font-semibold leading-6 text-gray-900"
+          >
+            Iniciar Sesión <span aria-hidden="true">&rarr;</span>
+          </Link>
         </div>
-        {!value && (
-          <div className="hidden lg:flex lg:flex-1 lg:justify-end">
-            <Link
-              href="/login"
-              className="text-sm font-semibold leading-6 text-gray-900"
-            >
-              Iniciar Sesión <span aria-hidden="true">&rarr;</span>
-            </Link>
-          </div>
-        )}
       </nav>
       <Dialog
         as="div"
@@ -82,27 +68,14 @@ export const Header = () => {
           </div>
           <div className="mt-6 flow-root">
             <div className="-my-6 divide-y divide-gray-500/10">
-              <div className="space-y-2 py-6">
-                {navigation.map((item) => (
-                  <a
-                    key={item.name}
-                    href={item.href}
-                    className="-mx-3 block rounded-lg px-3 py-2 text-base font-semibold leading-7 text-gray-900 hover:bg-gray-50"
-                  >
-                    {item.name}
-                  </a>
-                ))}
+              <div className={`${token ? "hidden" : "py-6"}`}>
+                <Link
+                  href="/login"
+                  className="-mx-3 block rounded-lg px-3 py-2.5 text-base font-semibold leading-7 text-gray-900 hover:bg-gray-50"
+                >
+                  Iniciar Sesión
+                </Link>
               </div>
-              {!value && (
-                <div className="py-6">
-                  <Link
-                    href="/login"
-                    className="-mx-3 block rounded-lg px-3 py-2.5 text-base font-semibold leading-7 text-gray-900 hover:bg-gray-50"
-                  >
-                    Iniciar Sesión
-                  </Link>
-                </div>
-              )}
             </div>
           </div>
         </Dialog.Panel>
