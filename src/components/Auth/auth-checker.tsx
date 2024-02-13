@@ -3,7 +3,7 @@ import { tokenId } from "@/utils/const";
 import { usePathname, useRouter } from "next/navigation";
 import React from "react";
 
-const routesWithAuth = ["/home"];
+const routesWithAuth = ["/tasks"];
 
 const AuthCheker = ({ children }: { children: React.ReactNode }) => {
   const router = useRouter();
@@ -22,7 +22,7 @@ const AuthCheker = ({ children }: { children: React.ReactNode }) => {
     if (typeof window !== "undefined") {
       const token = localStorage.getItem(tokenId);
       if (token && token.length > 10) {
-        router.push("/home");
+        router.push("/tasks");
       } else {
         return children;
       }

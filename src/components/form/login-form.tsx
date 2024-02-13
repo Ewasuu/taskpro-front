@@ -38,7 +38,7 @@ export const LoginForm = () => {
 
     if (parsedResponse.success) {
       setValue(parsedResponse.token);
-      router.push("/home");
+      router.push("/tasks");
     } else {
       console.log(parsedResponse);
       setError("password", {
