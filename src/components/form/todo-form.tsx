@@ -52,7 +52,7 @@ export const TodoForm: React.FC<TodoFormType> = ({ setOpen, setTasks }) => {
         };
         setTasks((prev) => prev.concat(newTask));
         setOpen(false);
-        toast.success("Creado xitosamente");
+        toast.success("Creado exitosamente");
       } else {
         toast.error(parsedResponse.errorMessage);
       }

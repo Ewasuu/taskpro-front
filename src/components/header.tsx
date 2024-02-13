@@ -1,17 +1,25 @@
 "use client";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { Dialog } from "@headlessui/react";
 import { Bars3Icon, XMarkIcon } from "@heroicons/react/24/outline";
 import { Logo } from "./logo";
 import Link from "next/link";
 import { tokenId } from "@/utils/const";
+import { usePathname } from "next/navigation";
 
 export const Header = () => {
-  const [mobileMenuOpen, setMobileMenuOpen] = React.useState(false);
+  const [mobileMenuOpen, setMobileMenuOpen] = useState<boolean>(false);
+  const [isClient, setIsClient] = useState<boolean>(false);
+  const path = usePathname();
+  const [token, setToken] = useState<string | null>(null);
 
-  let token: string | null = null;
-  if (typeof window !== "undefined") {
-    token = localStorage.getItem(tokenId);
+  useEffect(() => {
+    setIsClient(true);
+    setToken(localStorage.getItem(tokenId));
+  }, [path]);
+
+  if (!isClient) {
+    return null;
   }
 
   return (
@@ -33,17 +41,22 @@ export const Header = () => {
             <Bars3Icon className="h-6 w-6" aria-hidden="true" />
           </button>
         </div>
-        <div
-          className={`${
-            token ? "hidden" : "hidden lg:flex lg:flex-1 lg:justify-end"
-          }`}
-        >
-          <Link
-            href="/login"
-            className="text-sm font-semibold leading-6 text-gray-900"
-          >
-            Iniciar Sesión <span aria-hidden="true">&rarr;</span>
-          </Link>
+        <div className="hidden lg:flex lg:flex-1 lg:justify-end">
+          {token ? (
+            <Link
+              href="/logout"
+              className="text-sm font-semibold leading-6 text-gray-900"
+            >
+              Cerrar Sesión <span aria-hidden="true">&rarr;</span>
+            </Link>
+          ) : (
+            <Link
+              href="/login"
+              className="text-sm font-semibold leading-6 text-gray-900"
+            >
+              Iniciar Sesión <span aria-hidden="true">&rarr;</span>
+            </Link>
+          )}
         </div>
       </nav>
       <Dialog
@@ -68,13 +81,22 @@ export const Header = () => {
           </div>
           <div className="mt-6 flow-root">
             <div className="-my-6 divide-y divide-gray-500/10">
-              <div className={`${token ? "hidden" : "py-6"}`}>
-                <Link
-                  href="/login"
-                  className="-mx-3 block rounded-lg px-3 py-2.5 text-base font-semibold leading-7 text-gray-900 hover:bg-gray-50"
-                >
-                  Iniciar Sesión
-                </Link>
+              <div className={"py-6"}>
+                {token ? (
+                  <Link
+                    href="/logout"
+                    className="-mx-3 block rounded-lg px-3 py-2.5 text-base font-semibold leading-7 text-gray-900 hover:bg-gray-50"
+                  >
+                    Cerrar Sesión
+                  </Link>
+                ) : (
+                  <Link
+                    href="/login"
+                    className="-mx-3 block rounded-lg px-3 py-2.5 text-base font-semibold leading-7 text-gray-900 hover:bg-gray-50"
+                  >
+                    Iniciar Sesión
+                  </Link>
+                )}
               </div>
             </div>
           </div>

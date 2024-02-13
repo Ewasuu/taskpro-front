@@ -23,7 +23,7 @@ export default function RootLayout({
         <Header />
         <Toaster position="bottom-center" />
 
-        <div className="bg-white h-screen">
+        <div className="bg-white min-h-screen">
           <AuthCheker>{children}</AuthCheker>
         </div>
       </body>

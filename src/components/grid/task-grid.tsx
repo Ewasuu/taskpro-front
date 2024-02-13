@@ -15,7 +15,7 @@ export const TaskGrid: React.FC<taskGridType> = ({ data, deleteTask }) => {
         className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3"
       >
         {data?.map((task) => (
-          <TaskCard data={task} deleteTask={deleteTask} />
+          <TaskCard key={task.id} data={task} deleteTask={deleteTask} />
         ))}
       </ul>
     </div>

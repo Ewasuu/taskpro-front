@@ -1,4 +1,5 @@
 import { TaskType } from "@/types";
+import formatDate from "@/utils/format-date";
 import { EyeIcon, TrashIcon } from "@heroicons/react/24/outline";
 import Link from "next/link";
 import React from "react";
@@ -7,17 +8,6 @@ type TaskCardType = {
   data: TaskType;
   deleteTask: (id: string) => Promise<void>;
 };
-
-function formatDate(date: string) {
-  let newDate = new Date(date ?? "");
-  let day = newDate.getDate();
-  let month = newDate.getMonth() + 1; // Los monthes en JavaScript empiezan en 0
-  let year = newDate.getFullYear();
-
-  const fechaFormateada = `${day}/${month}/${year}`;
-
-  return fechaFormateada;
-}
 
 const TaskCard: React.FC<TaskCardType> = ({ data, deleteTask }) => {
   return (
@@ -61,7 +51,7 @@ const TaskCard: React.FC<TaskCardType> = ({ data, deleteTask }) => {
           )}
           <div className="-ml-px flex w-0 flex-1">
             <Link
-              href={`/task/${data.id}`}
+              href={`/tasks/${data.id}`}
               className="relative inline-flex w-0 flex-1 items-center justify-center gap-x-3 rounded-br-lg border border-transparent py-4 text-sm font-semibold text-gray-900"
             >
               <EyeIcon className="h-5 w-5 text-gray-400" aria-hidden="true" />

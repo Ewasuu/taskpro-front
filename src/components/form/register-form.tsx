@@ -68,8 +68,9 @@ export const RegisterForm = () => {
       <FormContainer className="space-y-6" onSubmit={onSubmit}>
         <>
           <TextInput
-            labelText="Nombre"
+            labelText="Nombre y apellido"
             id="name"
+            maxLength={200}
             required
             autoComplete="given-name"
             errorMessage={errors.name?.message?.toString() ?? ""}
@@ -86,6 +87,7 @@ export const RegisterForm = () => {
             id="email"
             required
             type="email"
+            maxLength={200}
             autoComplete="email"
             errorMessage={errors.mail?.message?.toString() ?? ""}
             {...register("email", {
@@ -100,6 +102,8 @@ export const RegisterForm = () => {
             labelText="Contraseña"
             id="password"
             required
+            maxLength={20}
+            minLength={6}
             type="password"
             errorMessage={errors.password?.message?.toString() ?? ""}
             {...register("password", {
@@ -115,6 +119,8 @@ export const RegisterForm = () => {
             id="repeat_password"
             required
             type="password"
+            maxLength={20}
+            minLength={6}
             errorMessage={errors.repeat_password?.message?.toString() ?? ""}
             {...register("repeat_password", {
               required: {

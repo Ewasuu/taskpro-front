@@ -10,7 +10,7 @@ import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import toast from "react-hot-toast";
 
-export default function HomePage() {
+export default function TaskPage() {
   const [open, setOpen] = useState(false);
   const [tasks, setTasks] = useState<TaskType[]>([]);
   const router = useRouter();
@@ -72,9 +72,16 @@ export default function HomePage() {
     }
   };
 
+  const [isClient, setIsClient] = useState<boolean>(false);
+
   useEffect(() => {
+    setIsClient(true);
     GetTasks();
   }, []);
+
+  if (!isClient) {
+    return null;
+  }
 
   return (
     <div className="relative isolate px-6 pt-14 lg:px-8">
@@ -86,5 +93,3 @@ export default function HomePage() {
     </div>
   );
 }
-
-HomePage.AuthRequired = true;
