@@ -1,5 +1,9 @@
 import { CommentType } from "@/types";
+import { tokenId } from "@/utils/const";
+import { PencilIcon, TrashIcon } from "@heroicons/react/24/outline";
+import { useRouter } from "next/navigation";
 import React from "react";
+import toast from "react-hot-toast";
 
 function classNames(...classes: string[]) {
   return classes.filter(Boolean).join(" ");
@@ -8,9 +12,46 @@ function classNames(...classes: string[]) {
 type CommmentsType = {
   comments: CommentType[];
   className: string;
+  getComments: () => void;
+  setComment: React.Dispatch<React.SetStateAction<CommentType | undefined>>;
 };
 
-export const Comments: React.FC<CommmentsType> = ({ comments, className }) => {
+export const Comments: React.FC<CommmentsType> = ({
+  comments,
+  className,
+  getComments,
+  setComment,
+}) => {
+  const router = useRouter();
+
+  const deleteComment = async (id: string) => {
+    const token = window.localStorage.getItem(tokenId);
+    const response = await fetch(
+      `${process.env.NEXT_PUBLIC_API_URL}/comments/${id}`,
+      {
+        method: "DELETE",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token?.replaceAll('"', "")}`,
+        },
+      }
+    );
+
+    if (response.status === 401) {
+      localStorage.removeItem(tokenId);
+      router.push("/login");
+    } else {
+      const parsedResponse = await response.json();
+
+      if (parsedResponse.success) {
+        console.log(parsedResponse);
+        getComments();
+      } else {
+        console.log(parsedResponse);
+        toast.error(parsedResponse.errorMessage);
+      }
+    }
+  };
   return (
     <div className={className}>
       <h2 className="text-sm font-semibold leading-6 text-gray-900">
@@ -44,6 +85,20 @@ export const Comments: React.FC<CommmentsType> = ({ comments, className }) => {
                   <p className="text-sm leading-6 text-gray-500">
                     {comment.text}
                   </p>
+                  <div>
+                    <button
+                      onClick={() => deleteComment(comment.id)}
+                      className="text-red-600 px-4"
+                    >
+                      <TrashIcon width={15} height={15} />{" "}
+                    </button>
+                    <button
+                      onClick={() => setComment(comment)}
+                      className="text-blue-600 px-4"
+                    >
+                      <PencilIcon width={15} height={15} />{" "}
+                    </button>
+                  </div>
                 </div>
               </>
             </li>

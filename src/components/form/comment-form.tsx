@@ -1,5 +1,5 @@
 "use client";
-import React from "react";
+import React, { useEffect } from "react";
 import { FormContainer } from "./form-container";
 import { useForm } from "react-hook-form";
 import { ArrowLongRightIcon } from "@heroicons/react/24/outline";
@@ -13,6 +13,8 @@ type CommentFormType = {
   userId: string;
   userName: string;
   getComments: () => Promise<void>;
+  comment: CommentType | undefined;
+  setComment: React.Dispatch<React.SetStateAction<CommentType | undefined>>;
 };
 
 export const CommentForm: React.FC<CommentFormType> = ({
@@ -20,28 +22,44 @@ export const CommentForm: React.FC<CommentFormType> = ({
   userId,
   userName,
   getComments,
+  comment,
+  setComment,
 }) => {
-  const { handleSubmit, register, reset } = useForm();
+  const { handleSubmit, register, reset, setValue } = useForm({
+    defaultValues: {
+      text: comment?.text,
+    },
+  });
   const router = useRouter();
+
+  useEffect(() => {
+    if (comment) {
+      setValue("text", comment.text);
+    } else {
+      setValue("text", "");
+    }
+  }, [comment]);
 
   const onSubmit = handleSubmit(async (data) => {
     const token = window.localStorage.getItem(tokenId);
-    const response = await fetch(
-      `${process.env.NEXT_PUBLIC_API_URL}/comments`,
-      {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${token?.replaceAll('"', "")}`,
-        },
-        body: JSON.stringify({
-          text: data.text,
-          taskId: taskId,
-          userId: userId,
-          userName: userName,
-        }),
-      }
-    );
+    const url = comment?.id
+      ? `${process.env.NEXT_PUBLIC_API_URL}/comments/${comment?.id}`
+      : `${process.env.NEXT_PUBLIC_API_URL}/comments`;
+
+    const method = comment?.id ? "PUT" : "POST";
+    const response = await fetch(url, {
+      method: method,
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token?.replaceAll('"', "")}`,
+      },
+      body: JSON.stringify({
+        text: data.text,
+        taskId: taskId,
+        userId: userId,
+        userName: userName,
+      }),
+    });
 
     if (response.status === 401) {
       localStorage.removeItem(tokenId);
@@ -50,6 +68,7 @@ export const CommentForm: React.FC<CommentFormType> = ({
       const parsedResponse = await response.json();
 
       if (parsedResponse.success) {
+        setComment(undefined);
         getComments();
         reset();
       } else {

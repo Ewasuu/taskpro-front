@@ -19,6 +19,7 @@ export const CommentsContainer: React.FC<CommenContainer> = ({
   userName,
 }) => {
   const [comments, setComments] = useState<CommentType[]>([]);
+  const [comment, setComment] = useState<CommentType>();
   const router = useRouter();
   const getComments = async () => {
     const token = window.localStorage.getItem(tokenId);
@@ -55,9 +56,16 @@ export const CommentsContainer: React.FC<CommenContainer> = ({
 
   return (
     <div>
-      <Comments comments={comments} className="" />
+      <Comments
+        comments={comments}
+        className=""
+        getComments={getComments}
+        setComment={setComment}
+      />
 
       <CommentForm
+        setComment={setComment}
+        comment={comment}
         taskId={taskId}
         userId={userId}
         userName={userName}

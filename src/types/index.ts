@@ -32,6 +32,7 @@ export type UserType = {
 }
 
 export type CommentType = {
+    id: string
     text: string;
     userName: string;
     date: string;
