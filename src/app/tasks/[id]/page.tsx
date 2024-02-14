@@ -11,6 +11,7 @@ import { Drawer } from "@/components/drawer/drawer";
 import AddUserToTaskForm from "@/components/form/add-user-to-task-form";
 import { CommentsContainer } from "@/components/comments/comments-container";
 import { EditTaskForm } from "@/components/form/edit-task-form";
+import { isToken } from "@/components/Auth/auth-checker";
 
 export default function TaskPage() {
   const router = useRouter();
@@ -205,6 +206,10 @@ export default function TaskPage() {
 
   useEffect(() => {
     if (taskId !== null) {
+      const token = localStorage.getItem(tokenId);
+      if (!isToken(token)) {
+        router.push("/login");
+      }
       getTask();
       getMe();
     }
@@ -223,17 +228,12 @@ export default function TaskPage() {
             Editar <PencilIcon className="ml-1" width={20} height={20} />
           </button>
         ) : (
-          <>
-            <button
-              disabled
-              className="flex mt-4  items-center rounded-md bg-indigo-400 px-3.5 py-2.5 text-sm font-semibold text-white shadow-sm"
-            >
-              Editar <PencilIcon className="ml-1" width={20} height={20} />
-            </button>
-            <small className="text-yellow-300">
-              No tienes permisos para editar este archivo
-            </small>
-          </>
+          <button
+            disabled
+            className="flex mt-4  items-center rounded-md bg-indigo-400 px-3.5 py-2.5 text-sm font-semibold text-white shadow-sm"
+          >
+            Editar <PencilIcon className="ml-1" width={20} height={20} />
+          </button>
         )}
       </div>
       <div>

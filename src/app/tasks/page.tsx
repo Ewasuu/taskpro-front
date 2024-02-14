@@ -1,9 +1,9 @@
 "use client";
+import { isToken } from "@/components/Auth/auth-checker";
 import { Drawer } from "@/components/drawer/drawer";
 import { TodoForm } from "@/components/form/todo-form";
 import { TaskGrid } from "@/components/grid/task-grid";
-import { SearchFilter } from "@/components/search/search-filter";
-import { NextPageWithAuth, TaskType } from "@/types";
+import { TaskType } from "@/types";
 import { tokenId } from "@/utils/const";
 import { NextPage } from "next";
 import { useRouter } from "next/navigation";
@@ -15,15 +15,18 @@ export default function TaskPage() {
   const [tasks, setTasks] = useState<TaskType[]>([]);
   const router = useRouter();
 
-  const GetTasks = async () => {
+  const GetTasks = async (filter: string = "all") => {
     const token = window.localStorage.getItem(tokenId);
 
-    const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/tasks`, {
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${token?.replaceAll('"', "")}`,
-      },
-    });
+    const response = await fetch(
+      `${process.env.NEXT_PUBLIC_API_URL}/tasks?filter${filter}`,
+      {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token?.replaceAll('"', "")}`,
+        },
+      }
+    );
 
     if (response.status === 401) {
       localStorage.removeItem(tokenId);
@@ -75,8 +78,13 @@ export default function TaskPage() {
   const [isClient, setIsClient] = useState<boolean>(false);
 
   useEffect(() => {
-    setIsClient(true);
-    GetTasks();
+    const token = localStorage.getItem(tokenId);
+    if (!isToken(token)) {
+      router.push("/login");
+    } else {
+      setIsClient(true);
+      GetTasks();
+    }
   }, []);
 
   if (!isClient) {
@@ -85,7 +93,6 @@ export default function TaskPage() {
 
   return (
     <div className="relative isolate px-6 pt-14 lg:px-8">
-      <SearchFilter setOpen={setOpen} />
       <TaskGrid data={tasks ?? []} deleteTask={deleteTask} />
       <Drawer title="Crear Tarea" open={open} setOpen={setOpen}>
         <TodoForm setOpen={setOpen} setTasks={setTasks} />

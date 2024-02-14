@@ -1,25 +1,30 @@
 "use client";
-import { useState } from "react";
 import { CheckIcon, ChevronUpDownIcon } from "@heroicons/react/20/solid";
 import { Combobox } from "@headlessui/react";
 
 export type dataDropdownType = {
   id: number;
+  filter: string;
   name: string;
 };
 
 type dropdownType = {
   data: dataDropdownType[];
+  setFilter: React.Dispatch<React.SetStateAction<string>>;
+  selectedFilter: string;
 };
 
 function classNames(...classes: string[]) {
   return classes.filter(Boolean).join(" ");
 }
 
-export const Dropdown: React.FC<dropdownType> = ({ data }) => {
-  const [selectedPerson, setSelectedPerson] = useState(data[0]);
+export const Dropdown: React.FC<dropdownType> = ({
+  data,
+  setFilter,
+  selectedFilter,
+}) => {
   return (
-    <Combobox as="div" value={selectedPerson} onChange={setSelectedPerson}>
+    <Combobox as="div" value={selectedFilter} onChange={setFilter}>
       <div className="relative mt-2">
         <Combobox.Input
           className="w-full rounded-md border-0 bg-white py-1.5 pl-3 pr-10 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
@@ -34,10 +39,11 @@ export const Dropdown: React.FC<dropdownType> = ({ data }) => {
 
         {data.length > 0 && (
           <Combobox.Options className="absolute z-10 mt-1 max-h-60 w-full overflow-auto rounded-md bg-white py-1 text-base shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none sm:text-sm">
-            {data.map((person) => (
+            {data.map((item) => (
               <Combobox.Option
-                key={person.id}
-                value={person}
+                key={item.id}
+                onClick={() => setFilter(item.filter)}
+                value={item}
                 className={({ active }) =>
                   classNames(
                     "relative cursor-default select-none py-2 pl-3 pr-9",
@@ -53,7 +59,7 @@ export const Dropdown: React.FC<dropdownType> = ({ data }) => {
                         selected ? "font-semibold" : ""
                       )}
                     >
-                      {person.name}
+                      {item.name}
                     </span>
 
                     {selected && (
@@ -76,8 +82,3 @@ export const Dropdown: React.FC<dropdownType> = ({ data }) => {
     </Combobox>
   );
 };
-
-const data = [
-  { id: 1, name: "Leslie Alexander" },
-  // More users...
-];

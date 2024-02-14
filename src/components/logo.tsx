@@ -4,10 +4,9 @@ import Link from "next/link";
 
 type LogoType = {
   className?: string;
-  withUrl?: boolean;
 };
 
-export const Logo: React.FC<LogoType> = ({ className, withUrl = true }) => {
+export const Logo: React.FC<LogoType> = ({ className }) => {
   return (
     <Link className={className} href={"/"}>
       <div>

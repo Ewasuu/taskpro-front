@@ -41,8 +41,22 @@ export const Header = () => {
             <Bars3Icon className="h-6 w-6" aria-hidden="true" />
           </button>
         </div>
+        {token && token.length > 10 && (
+          <div className="flex-grow">
+            <Link
+              className={`${
+                path === "/profile"
+                  ? "text-white-600 px-4 py-2 bg-indigo-600 rounded-md "
+                  : "text-black hover:text-indigo-600"
+              } `}
+              href={"/profile"}
+            >
+              Perfil
+            </Link>
+          </div>
+        )}
         <div className="hidden lg:flex lg:flex-1 lg:justify-end">
-          {token ? (
+          {token && token.length > 10 ? (
             <Link
               href="/logout"
               className="text-sm font-semibold leading-6 text-gray-900"
@@ -82,7 +96,7 @@ export const Header = () => {
           <div className="mt-6 flow-root">
             <div className="-my-6 divide-y divide-gray-500/10">
               <div className={"py-6"}>
-                {token ? (
+                {token && token.length > 10 ? (
                   <Link
                     href="/logout"
                     className="-mx-3 block rounded-lg px-3 py-2.5 text-base font-semibold leading-7 text-gray-900 hover:bg-gray-50"
